@@ -1,0 +1,3 @@
+APP_URL= //api.maptiler.com/
+MAP_SERVICE_API_KEY= Vs8O1bslFYr2Yv6waB5x
+URL_DEPLOYMENT = https://zulfikrisadrah.github.io/Story-App/
