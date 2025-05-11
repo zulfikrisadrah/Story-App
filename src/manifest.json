@@ -23,7 +23,7 @@
       "name": "Add Story",
       "short_name": "Add",
       "description": "Go to the Add Story Page",
-      "url": "/#/add-story",
+      "url": "index.html#/add-story",
       "icons": [{ "src": "images/logo.png", "sizes": "192x192", "type": "image/png" }]
     }
   ],
