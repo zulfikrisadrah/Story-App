@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   if ('serviceWorker' in navigator && 'PushManager' in window) {
     const registration =
-      await navigator.serviceWorker.register('/sw.bundle.js');
+      await navigator.serviceWorker.register('sw.bundle.js');
     console.log('Service Worker registered.');
 
     const subscribeLink = document.getElementById('subscribe-link');
