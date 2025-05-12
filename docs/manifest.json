@@ -1,0 +1,42 @@
+{
+  "name": "Story App",
+  "short_name": "Stories",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#007bff",
+  "description": "Story applications",
+  "icons": [
+    {
+      "src": "images/logo.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "images/logo.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Add Story",
+      "short_name": "Add",
+      "description": "Go to the Add Story Page",
+      "url": "index.html#/add-story",
+      "icons": [{ "src": "images/logo.png", "sizes": "192x192", "type": "image/png" }]
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "images/screenshot-desktop.png",
+      "type": "image/png",
+      "sizes": "1280x720"
+    },
+    {
+      "src": "images/screenshot-mobile.png",
+      "type": "image/png",
+      "sizes": "360x640"
+    }
+  ]
+}
