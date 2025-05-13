@@ -4,6 +4,7 @@ import {
   subscribeUserToPush,
   unsubscribeUserFromPush,
 } from './utils/notification';
+import { Workbox } from 'workbox-window';
 
 document.addEventListener('DOMContentLoaded', async () => {
   let deferredPrompt;
@@ -35,44 +36,51 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   if ('serviceWorker' in navigator && 'PushManager' in window) {
-    const registration =
-      await navigator.serviceWorker.register('sw.bundle.js');
-    console.log('Service Worker registered.');
+    try {
+      const wb = new Workbox('sw.bundle.js');
+      await wb.register();
+      console.log('Service Worker registered via Workbox.');
 
-    const subscribeLink = document.getElementById('subscribe-link');
-    const subscribeButton = document.getElementById('subscribe-button');
+      const subscribeLink = document.getElementById('subscribe-link');
+      const subscribeButton = document.getElementById('subscribe-button');
 
-    if (token && subscribeLink && subscribeButton) {
-      subscribeLink.style.display = 'inline';
+      if (token && subscribeLink && subscribeButton) {
+        subscribeLink.style.display = 'inline';
 
-      let isSubscribed = false;
-      const subscription = await registration.pushManager.getSubscription();
-      if (subscription) isSubscribed = true;
+        let isSubscribed = false;
+        const registration = await navigator.serviceWorker.ready;
+        const subscription = await registration.pushManager.getSubscription();
+        if (subscription) isSubscribed = true;
 
-      subscribeButton.innerHTML = isSubscribed
-        ? '<i class="fas fa-bell-slash"></i> Unsubscribe'
-        : '<i class="fas fa-bell"></i> Subscribe';
+        const updateButtonText = () => {
+          subscribeButton.innerHTML = isSubscribed
+            ? '<i class="fas fa-bell-slash"></i> Unsubscribe'
+            : '<i class="fas fa-bell"></i> Subscribe';
+        };
 
-      subscribeButton.addEventListener('click', async () => {
-        try {
-          if (!isSubscribed) {
-            await subscribeUserToPush(registration);
-            subscribeButton.innerHTML =
-              '<i class="fas fa-bell-slash"></i> Unsubscribe';
-            isSubscribed = true;
-          } else {
-            await unsubscribeUserFromPush(registration);
-            subscribeButton.innerHTML = '<i class="fas fa-bell"></i> Subscribe';
-            isSubscribed = false;
+        updateButtonText();
+
+        subscribeButton.addEventListener('click', async () => {
+          try {
+            if (!isSubscribed) {
+              await subscribeUserToPush(registration);
+              isSubscribed = true;
+            } else {
+              await unsubscribeUserFromPush(registration);
+              isSubscribed = false;
+            }
+            updateButtonText();
+          } catch (error) {
+            Swal.fire({
+              icon: 'error',
+              title: 'Error',
+              text: 'An error occurred while processing your request. Please try again.',
+            });
           }
-        } catch (error) {
-          Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: 'An error occurred while processing your request. Please try again.',
-          });
-        }
-      });
+        });
+      }
+    } catch (error) {
+      console.error('Service Worker registration failed:', error);
     }
   }
 

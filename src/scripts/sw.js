@@ -1,14 +1,15 @@
 import { precacheAndRoute } from 'workbox-precaching';
+import { registerRoute } from 'workbox-routing';
+import { StaleWhileRevalidate } from 'workbox-strategies';
 
 precacheAndRoute(self.__WB_MANIFEST);
 
-self.addEventListener('fetch', (event) => {
-  event.respondWith(
-    caches.match(event.request).then((cachedResponse) => {
-      return cachedResponse || fetch(event.request);
-    }),
-  );
-});
+registerRoute(
+  ({ request }) => request.destination === 'script' ||
+                   request.destination === 'style' ||
+                   request.destination === 'document',
+  new StaleWhileRevalidate()
+);
 
 self.addEventListener('push', (event) => {
   let title = 'Notifikasi Baru';
@@ -27,20 +28,4 @@ self.addEventListener('push', (event) => {
   }
 
   event.waitUntil(self.registration.showNotification(title, options));
-});
-
-self.addEventListener('activate', (event) => {
-  const cacheWhitelist = [CACHE_NAME];
-
-  event.waitUntil(
-    caches.keys().then((cacheNames) => {
-      return Promise.all(
-        cacheNames.map((cacheName) => {
-          if (!cacheWhitelist.includes(cacheName)) {
-            return caches.delete(cacheName);
-          }
-        }),
-      );
-    }),
-  );
 });
