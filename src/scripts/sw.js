@@ -5,10 +5,11 @@ import { StaleWhileRevalidate } from 'workbox-strategies';
 precacheAndRoute(self.__WB_MANIFEST);
 
 registerRoute(
-  ({ request }) => request.destination === 'script' ||
-                   request.destination === 'style' ||
-                   request.destination === 'document',
-  new StaleWhileRevalidate()
+  ({ request }) =>
+    request.destination === 'script' ||
+    request.destination === 'style' ||
+    request.destination === 'document',
+  new StaleWhileRevalidate(),
 );
 
 self.addEventListener('push', (event) => {
